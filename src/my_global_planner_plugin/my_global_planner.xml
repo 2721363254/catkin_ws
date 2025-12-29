@@ -1,0 +1,10 @@
+<!-- my_global_planner.xml -->
+<library path="lib/libmy_global_planner_plugin">
+  <class name="my_global_planner_plugin/MyGlobalPlanner"
+         type="my_global_planner_plugin::MyGlobalPlanner"
+         base_class_type="nav_core::BaseGlobalPlanner">
+    <description>
+      Custom Global Planner that uses RRT* path from external planner
+    </description>
+  </class>
+</library>

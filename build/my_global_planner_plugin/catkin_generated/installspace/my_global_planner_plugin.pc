@@ -1,0 +1,8 @@
+prefix=/home/jetson/catkin_ws/install
+
+Name: my_global_planner_plugin
+Description: Description of my_global_planner_plugin
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib -lmy_global_planner_plugin
+Requires: roscpp nav_core costmap_2d pluginlib nav_msgs geometry_msgs tf

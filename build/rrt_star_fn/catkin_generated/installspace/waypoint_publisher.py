@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+import rospy
+from geometry_msgs.msg import PoseArray, Pose
+
+class WaypointPublisher:
+    def __init__(self):
+        rospy.init_node('waypoint_publisher', anonymous=True)
+        
+        # 发布器
+        self.pub = rospy.Publisher('/mission/waypoints', PoseArray, queue_size=10, latch=True)
+        
+        # 参数
+        self.waypoint_file = rospy.get_param('~waypoint_file', '')
+        
+        # 发布航点
+        self.publish_waypoints()
+        
+        rospy.spin()
+    
+    def publish_waypoints(self):
+        waypoints = PoseArray()
+        waypoints.header.frame_id = "map"
+        waypoints.header.stamp = rospy.Time.now()
+        
+        # 从文件读取航点
+        if self.waypoint_file:
+            try:
+                with open(self.waypoint_file, 'r') as f:
+                    for line in f:
+                        if line.strip() and not line.startswith('#'):
+                            parts = line.strip().split(',')
+                            if len(parts) >= 3:
+                                pose = Pose()
+                                pose.position.x = float(parts[0])
+                                pose.position.y = float(parts[1])
+                                pose.position.z = float(parts[2])
+                                pose.orientation.w = 1.0
+                                waypoints.poses.append(pose)
+                rospy.loginfo("Published %d waypoints", len(waypoints.poses))
+                self.pub.publish(waypoints)
+            except Exception as e:
+                rospy.logerr("Failed to load waypoints: %s", str(e))
+        else:
+            # 默认航点
+            poses = [
+                [1.0, 1.0, 5.0],
+                [3.0, 1.0, 5.0],
+                [3.0, 3.0, 5.0],
+                [1.0, 3.0, 5.0]
+            ]
+            
+            for pos in poses:
+                pose = Pose()
+                pose.position.x = pos[0]
+                pose.position.y = pos[1]
+                pose.position.z = pos[2]
+                pose.orientation.w = 1.0
+                waypoints.poses.append(pose)
+            
+            rospy.loginfo("Published %d default waypoints", len(waypoints.poses))
+            self.pub.publish(waypoints)
+
+if __name__ == '__main__':
+    WaypointPublisher()

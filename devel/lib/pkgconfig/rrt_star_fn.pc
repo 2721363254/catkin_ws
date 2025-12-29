@@ -1,0 +1,8 @@
+prefix=/home/jetson/catkin_ws/devel
+
+Name: rrt_star_fn
+Description: Description of rrt_star_fn
+Version: 0.0.0
+Cflags: -I/home/jetson/catkin_ws/src/rrt_star_fn/include
+Libs: -L${prefix}/lib -lrrt_star_fn
+Requires: roscpp std_msgs geometry_msgs visualization_msgs tf nav_msgs
