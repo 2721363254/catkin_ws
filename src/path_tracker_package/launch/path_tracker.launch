@@ -1,0 +1,21 @@
+<!-- drone_path_tracker.launch -->
+<launch>
+    <node name="path_tracker_node" pkg="path_tracker_package" type="path_tracker_node" output="screen">
+        <!-- 3D控制参数 -->
+        <param name="lookahead_dist_xy" value="0.1"/>  <!-- 水平方向前视距离 -->
+        <param name="lookahead_dist_z" value="0.1"/>   <!-- 垂直方向前视距离 -->
+        <param name="max_linear_vel_xy" value="1.0"/>  <!-- 最大水平速度 -->
+        <param name="max_linear_vel_z" value="0.5"/>   <!-- 最大垂直速度 -->
+        <param name="max_angular_vel" value="0.5"/>    <!-- 最大偏航角速度 -->
+        
+        <!-- 控制增益 -->
+        <param name="xy_gain" value="1.5"/>   <!-- 水平位置控制增益 -->
+        <param name="z_gain" value="1.0"/>    <!-- 高度控制增益 -->
+        <param name="yaw_gain" value="1.0"/>  <!-- 偏航控制增益 -->
+        
+        <!-- 着陆参数 -->
+        <param name="landing_speed" value="0.1"/>      <!-- 着陆下降速度 -->
+        <param name="position_tolerance" value="0.1"/> <!-- 位置容差 -->
+        <param name="yaw_tolerance" value="0.05"/>     <!-- 偏航容差 -->
+    </node>
+</launch>

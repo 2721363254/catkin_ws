@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- GPS转换节点 -->
+    <node pkg="gps" type="gps_converter_node" name="gps_converter_node" output="screen">
+        <!-- GPS原点（初始位置） -->
+        <param name="origin_lat" value="0.0"/>
+        <param name="origin_lon" value="0.0"/>
+        <param name="origin_alt" value="0.0"/>
+        
+        <!-- 发布初始位置 -->
+        <param name="publish_initial_pose" value="true"/>
+        
+        <!-- 坐标系设置 -->
+        <param name="base_frame_id" value="base_link"/>
+        <param name="odom_frame_id" value="odom"/>
+        <param name="map_frame_id" value="map"/>
+    </node>
+    
+    <!-- move_base导航 -->
+    <include file="$(find tutorial_navigation)/launch/move_base.launch"/>
+
+</launch>

@@ -1,5 +1,5 @@
-base_global_planner: "global_planner/GlobalPlanner"
-# base_global_planner: "my_global_planner_plugin/MyGlobalPlanner"
+# base_global_planner: "global_planner/GlobalPlanner"
+base_global_planner: "my_global_planner_plugin/MyGlobalPlanner"
 base_local_planner: "dwa_local_planner/DWAPlannerROS"
 recovery_behaviors:
   - {name: conservative_reset, type: clear_costmap_recovery/ClearCostmapRecovery}

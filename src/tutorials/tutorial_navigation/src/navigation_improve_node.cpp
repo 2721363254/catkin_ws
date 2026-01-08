@@ -48,6 +48,11 @@ void move_base_cmd_vel_cb(const geometry_msgs::Twist::ConstPtr &msg) {
     move_base_twist = *msg;
 }
 
+std_msgs::Bool land;
+void landing(const std_msgs::Bool::ConstPtr &msg) {
+    land = *msg;
+}
+
 geometry_msgs::Point last_err;
 geometry_msgs::Point err_sum;
 double last_yaw_err = 0.;
@@ -135,7 +140,8 @@ int main(int argc, char **argv) {
     ros::ServiceClient arming_client = nh.serviceClient<mavros_msgs::CommandBool>("mavros/cmd/arming");
     ros::ServiceClient set_mode_client = nh.serviceClient<mavros_msgs::SetMode>("mavros/set_mode");
 
-    ros::Publisher drone_ready_pub = nh.advertise<std_msgs::Bool>("mission/state", 1);
+    ros::Publisher drone_ready_pub = nh.advertise<std_msgs::Bool>("/mission/state", 1);
+    ros::Subscriber drone_land_pub = nh.subscribe<std_msgs::Bool>("/mission/land", 1, landing);
 
     // Get hovering location in parameters
     geometry_msgs::Point nav_target;
@@ -191,22 +197,18 @@ int main(int argc, char **argv) {
             case 2:  // Takeoff state
                 if (current_pose.pose.position.z > nav_target.z) {
                     fsm_state = 3;  // goto navigation state
-                    // 创建并发送消息
                     std_msgs::Bool ready_msg;
-                    ready_msg.data = true;  // 设置为true或false
+                    ready_msg.data = true;
                     drone_ready_pub.publish(ready_msg);
                 } else {
                     twist.twist.linear.z = 0.4;
                 }
                 break;
             case 3:  // Navigation state
-                if (getLengthBetweenPoints(nav_target, current_pose.pose.position) < 0.3) {
+                if (land.data) {
                     fsm_state = 4;  // goto hover state
-                    actionlib_msgs::GoalID cancel_msg;
-                    cancel_pub.publish(cancel_msg);
-                    last_srv_request = ros::Time::now();
                 } else {
-                    // twist.twist = move_base_twist;
+                    twist.twist = move_base_twist;
                     twist.twist.linear.z = std::max(-0.5, std::min(0.5, nav_target.z - current_pose.pose.position.z));
                     twist.twist.angular.z = std::max(-1.57, std::min(1.57, -current_rpy.z));
                 }
@@ -220,6 +222,7 @@ int main(int argc, char **argv) {
                 break;
             case 5:  // Land state
                 if (current_state.mode == "AUTO.LAND") {
+                    ROS_INFO("Landing...");
                     fsm_state = -1;  // goto do nothing state
                 } else if (current_pose.pose.position.z < 0.1) {
                     if (ros::Time::now() - last_srv_request > ros::Duration(0.5)) {
@@ -237,10 +240,11 @@ int main(int argc, char **argv) {
                 break;
         }
         vel_pub.publish(twist);
-        printTwistStamped(twist);
+        // printTwistStamped(twist);
         ros::spinOnce();
         rate.sleep();
     }
 
     return 0;
 }
+

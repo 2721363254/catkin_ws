@@ -65,8 +65,8 @@ tutorials/tutorial_vision/CMakeFiles/tutorial_vision_generate_messages_nodejs: /
 
 /home/jetson/catkin_ws/devel/share/gennodejs/ros/tutorial_vision/msg/CircleDetectResult.js: /opt/ros/noetic/lib/gennodejs/gen_nodejs.py
 /home/jetson/catkin_ws/devel/share/gennodejs/ros/tutorial_vision/msg/CircleDetectResult.js: /home/jetson/catkin_ws/src/tutorials/tutorial_vision/msg/CircleDetectResult.msg
-/home/jetson/catkin_ws/devel/share/gennodejs/ros/tutorial_vision/msg/CircleDetectResult.js: /home/jetson/catkin_ws/src/tutorials/tutorial_vision/msg/CircleInfo.msg
 /home/jetson/catkin_ws/devel/share/gennodejs/ros/tutorial_vision/msg/CircleDetectResult.js: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/jetson/catkin_ws/devel/share/gennodejs/ros/tutorial_vision/msg/CircleDetectResult.js: /home/jetson/catkin_ws/src/tutorials/tutorial_vision/msg/CircleInfo.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/jetson/catkin_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating Javascript code from tutorial_vision/CircleDetectResult.msg"
 	cd /home/jetson/catkin_ws/build/tutorials/tutorial_vision && ../../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gennodejs/cmake/../../../lib/gennodejs/gen_nodejs.py /home/jetson/catkin_ws/src/tutorials/tutorial_vision/msg/CircleDetectResult.msg -Itutorial_vision:/home/jetson/catkin_ws/src/tutorials/tutorial_vision/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p tutorial_vision -o /home/jetson/catkin_ws/devel/share/gennodejs/ros/tutorial_vision/msg
 

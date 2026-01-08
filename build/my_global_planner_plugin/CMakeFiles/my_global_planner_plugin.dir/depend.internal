@@ -41,6 +41,8 @@ my_global_planner_plugin/CMakeFiles/my_global_planner_plugin.dir/src/my_global_p
  /opt/ros/noetic/include/geometry_msgs/PolygonStamped.h
  /opt/ros/noetic/include/geometry_msgs/Pose.h
  /opt/ros/noetic/include/geometry_msgs/PoseStamped.h
+ /opt/ros/noetic/include/geometry_msgs/PoseWithCovariance.h
+ /opt/ros/noetic/include/geometry_msgs/PoseWithCovarianceStamped.h
  /opt/ros/noetic/include/geometry_msgs/Quaternion.h
  /opt/ros/noetic/include/geometry_msgs/QuaternionStamped.h
  /opt/ros/noetic/include/geometry_msgs/Transform.h
@@ -49,6 +51,8 @@ my_global_planner_plugin/CMakeFiles/my_global_planner_plugin.dir/src/my_global_p
  /opt/ros/noetic/include/geometry_msgs/TwistStamped.h
  /opt/ros/noetic/include/geometry_msgs/Vector3.h
  /opt/ros/noetic/include/geometry_msgs/Vector3Stamped.h
+ /opt/ros/noetic/include/geometry_msgs/Wrench.h
+ /opt/ros/noetic/include/geometry_msgs/WrenchStamped.h
  /opt/ros/noetic/include/map_msgs/OccupancyGridUpdate.h
  /opt/ros/noetic/include/nav_core/base_global_planner.h
  /opt/ros/noetic/include/nav_msgs/MapMetaData.h
@@ -145,8 +149,11 @@ my_global_planner_plugin/CMakeFiles/my_global_planner_plugin.dir/src/my_global_p
  /opt/ros/noetic/include/tf2/convert.h
  /opt/ros/noetic/include/tf2/exceptions.h
  /opt/ros/noetic/include/tf2/impl/convert.h
+ /opt/ros/noetic/include/tf2/impl/utils.h
  /opt/ros/noetic/include/tf2/transform_datatypes.h
  /opt/ros/noetic/include/tf2/transform_storage.h
+ /opt/ros/noetic/include/tf2/utils.h
+ /opt/ros/noetic/include/tf2_geometry_msgs/tf2_geometry_msgs.h
  /opt/ros/noetic/include/tf2_msgs/FrameGraph.h
  /opt/ros/noetic/include/tf2_msgs/FrameGraphRequest.h
  /opt/ros/noetic/include/tf2_msgs/FrameGraphResponse.h

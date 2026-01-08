@@ -1,0 +1,8 @@
+prefix=/home/jetson/catkin_ws/install
+
+Name: path_tracker_package
+Description: Description of path_tracker_package
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib -lpath_tracker
+Requires: roscpp geometry_msgs nav_msgs tf2

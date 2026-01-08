@@ -5,7 +5,9 @@
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.
 subdirs("gtest")
+subdirs("path_tracker_package")
 subdirs("livox_laser_simulation")
+subdirs("gps")
 subdirs("rrt_star_fn")
 subdirs("tutorials/tutorial_basic")
 subdirs("tutorials/tutorial_catapult")

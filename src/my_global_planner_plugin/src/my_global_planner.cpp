@@ -6,6 +6,56 @@
 
 namespace my_global_planner_plugin {
 
+std::vector<geometry_msgs::PoseStamped> MyGlobalPlanner::short_hold_plan(const geometry_msgs::PoseStamped& start,
+                const std::string& global_frame)
+{
+    std::vector<geometry_msgs::PoseStamped> plan;
+
+    geometry_msgs::PoseStamped p1 = start;
+    geometry_msgs::PoseStamped p2 = start;
+
+    p1.header.frame_id = global_frame;
+    p2.header.frame_id = global_frame;
+
+    p1.header.stamp = ros::Time::now();
+    p2.header.stamp = ros::Time::now();
+
+    // 关键：第二个点稍微“离开当前位置”
+    // 不能太远，否则 local planner 会 empty
+    // 不能太近，否则 isGoalReached = true
+    const double hold_dist = 1.0;  // 推荐 0.5 ~ 1.5 m
+
+    p2.pose.position.x += hold_dist;
+
+    // 朝向无所谓，但给一个合法值
+    p2.pose.orientation.w = 1.0;
+
+    plan.push_back(p1);
+    plan.push_back(p2);
+
+    return plan;
+}
+
+void MyGlobalPlanner::append_local_fake_tail(
+    std::vector<geometry_msgs::PoseStamped>& plan,
+    double tail_dist)
+{
+    if (plan.empty()) return;
+
+    geometry_msgs::PoseStamped tail = plan.back();
+
+    // 沿路径末端方向延伸，而不是世界坐标 +x
+    double yaw = tf2::getYaw(tail.pose.orientation);
+
+    tail.pose.position.x += tail_dist * std::cos(yaw);
+    tail.pose.position.y += tail_dist * std::sin(yaw);
+
+    tail.header.stamp = ros::Time::now();
+    tail.pose.orientation.w = 1.0;
+
+    plan.push_back(tail);
+}
+
 // 默认构造函数
 MyGlobalPlanner::MyGlobalPlanner() : 
     path_received_(false), 
@@ -66,28 +116,46 @@ void MyGlobalPlanner::pathCallback(const nav_msgs::Path::ConstPtr& path) {
 }
 
 // 规划函数
-bool MyGlobalPlanner::makePlan(const geometry_msgs::PoseStamped& start,
-                               const geometry_msgs::PoseStamped& goal,
-                               std::vector<geometry_msgs::PoseStamped>& plan) {
-    ROS_INFO("MyGlobalPlanner::makePlan called from [%s] to [%s]", 
-             start.header.frame_id.c_str(), goal.header.frame_id.c_str());
-    
-    // 检查是否有自定义路径可用
-    if (path_received_) {
-        // 清空输出路径
-        plan.clear();
-        
-        // 将自定义路径复制到plan中
-        for (const auto& pose : custom_path_.poses) {
-            plan.push_back(pose);
-        }
-        
-        ROS_INFO("Returning custom path with %zu points", plan.size());
-        return !plan.empty();
+bool MyGlobalPlanner::makePlan(
+    const geometry_msgs::PoseStamped& start,
+    const geometry_msgs::PoseStamped& goal,
+    std::vector<geometry_msgs::PoseStamped>& plan)
+{
+    plan.clear();
+
+    const std::string global_frame = costmap_ros_->getGlobalFrameID();
+
+    // ========= 情况 1：还没收到外部路径 =========
+    if (!path_received_) {
+        ROS_WARN_THROTTLE(1.0, "Waiting for /rrt_star_fn/path ...");
+
+        // 占位 plan（短、局部）
+        plan = short_hold_plan(start, "map");
+        return true;
     }
 
-    return false;
+        // ========= 情况 2：已经收到外部路径 =========
+    if (custom_path_.poses.size() < 2) {
+        ROS_ERROR("Custom path too short");
+        return false;
+    }
+
+    if (path_received_ && !plan_sent_) {
+            // 拷贝真实路径
+        for (auto pose : custom_path_.poses) {
+            pose.header.frame_id = global_frame;
+            pose.header.stamp = ros::Time::now();
+            plan.push_back(pose);
+        }
+        append_local_fake_tail(plan);
+        plan_sent_ = true;
+        ROS_INFO_THROTTLE(1.0, "Return external path, size=%lu", plan.size());
+        return true;
+    }
 }
+
+
+
 
 }  // namespace my_global_planner_plugin
 
